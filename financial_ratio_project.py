@@ -5,7 +5,8 @@ from openpyxl.utils import get_column_letter
 from docx import Document
 from docx.shared import Inches, Pt
 from docx.enum.text import WD_ALIGN_PARAGRAPH
-
+import csv
+import os
 
 # ============================================================
 # FINANCIAL RATIO ANALYSIS PROJECT
@@ -51,6 +52,44 @@ companies = {
     },
 }
 
+# ============================================================
+# Create CSV Dataset
+# ============================================================
+
+os.makedirs("data", exist_ok=True)
+
+csv_file = "data/financial_data.csv"
+
+csv_headers = [
+    "Company",
+    "Currency",
+    "Revenue",
+    "Net Income",
+    "Total Assets",
+    "Total Liabilities",
+    "Shareholders' Equity",
+    "EPS",
+    "Market Price"
+]
+
+with open(csv_file, "w", newline="", encoding="utf-8") as file:
+    writer = csv.DictWriter(file, fieldnames=csv_headers)
+    writer.writeheader()
+
+    for company, data in companies.items():
+        writer.writerow({
+            "Company": company,
+            "Currency": data["currency"],
+            "Revenue": data["revenue"],
+            "Net Income": data["net_income"],
+            "Total Assets": data["total_assets"],
+            "Total Liabilities": data["total_liabilities"],
+            "Shareholders' Equity": data["shareholders_equity"],
+            "EPS": data["eps"],
+            "Market Price": data["market_price"]
+        })
+
+print(f"CSV dataset created successfully: {csv_file}")
 
 # ============================================================
 # Ratio Calculation Functions
